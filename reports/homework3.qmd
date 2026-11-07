@@ -149,3 +149,110 @@ response variable. The difference between X @ beta_hat and X * beta_hat is that 
 multiplication, whereas the * operator signifies element wise mutliplication. So the * operator multiplies
 each element of X with the same element of beta_hat, but that is not the matrix multiplication that we want for this
 operation. We want mathematical matrix multiplication, which uses the @ symbol.
+
+# Part 4 - QR, SVD, and conditioning
+
+QR decomposition:
+```{python}
+Q, R = np.linalg.qr(X)
+
+print("Shape of Q:", Q.shape)
+print("Shape of R:", R.shape)
+
+print("Q @ R = X:",
+np.allclose(
+    Q @ R,
+    X
+))
+
+print("Q.T @ Q = I:",
+np.allclose(
+    Q.T @ Q,
+    np.eye(Q.shape[1])
+))
+```
+
+Single Value Decomposition (SVD):
+```{python}
+U, s, Vt = np.linalg.svd(
+    X,
+    full_matrices=False
+)
+```
+
+The shape of U is: `{python} U.shape`
+
+The shape of s is: `{python} s.shape`
+
+The shape of Vt is: `{python} Vt.shape`
+
+The singular values are `{python} s`
+
+Reconstruct X:
+```{python}
+X_reconstructed = (
+    U
+    @ np.diag(s)
+    @ Vt
+)
+
+print("X_reconstructed = X:",
+np.allclose(
+    X_reconstructed,
+    X
+))
+```
+
+Rank and conditioning:
+
+The rank of X is `{python} int(np.linalg.matrix_rank(X))`
+
+The condition number of X is approximately `{python} round(float(np.linalg.cond(X)), 4)`
+
+Raw, unstandardized design matrix:
+```{python}
+X_raw = np.column_stack([
+    np.ones(len(predictors)),
+    predictors
+])
+```
+
+The condition number of the raw, unstandardized data is approximately
+`{python} round(float(np.linalg.cond(X_raw)), 4)`
+
+Q @ R $\approx$ X verifies that the design matrix X has been correctly decomposed into the components of Q and R,
+and when Q and R are matrix multiplied back together, they should gives us back (approximately because of
+computational rounding) our design matrix X. Q.T @ Q $\approx$ I verifies that the matrix Q is an orthonormal matrix,
+because for an orthonormal matrix Q, Q.t @ Q = I, so this is just verifying that that is true, because the QR
+decomposition should return Q as an orthonormal matrix. The singular values from SVD tell us which directions are
+stronger and weaker in regards to the predictors effect on the response. Higher singular values mean a stronger effect
+on the response, and lower singular values mean a weaker effect on the response. A large condition number suggests
+that there is some collinearity betweent the predictors, so there might be some redundancy in the information provided
+by the predictors. For this data, the condition number did very drastically change after standardization. This happened
+because the condition number is based on the largest singular value and the smallest singular value. And this will
+be affected by the scaling of the units between predictors. If one predictor is measured in the thousands, and another
+is measured in single digits, the condition number will be very large. The condition number being very large is more due
+to scale mismatching between predictors, more than it is about collinearity in that case. So that is why we used a
+standardized design matrix, so that all the predictors had very similar scales for their measurements, which means that
+the condition number here tells us more about whether any predictors are colinear or not. Based on this, the
+standardized design matrix does not show any evidence of sever-near redundancy among predictors, as the condition
+number for the design matrix was `{python} round(float(np.linalg.cond(X)),4)`, which is fairly close to 1.
+
+# Part 5 - Reproducibility and Numerical Computing Reflection
+
+Clean execution matters a lot for a computational report as it is very important that your work is reproducible
+so that others can verify your work and hopefully get the same result everytime, and so that others can also
+build off of your work and be sure that there are no problems with it. This is why it is also important that 
+reusable code not depend on hidden notebook states, as that would make the whole report not reproducible as 
+important variables or code would depend on something that is specific to only you and no one else.
+The reason np.linalg.lstsq() is preferable to manually computing $(X^TX)^{-1}X^Ty$ is because computing inverses 
+takes a lot of computational power, and that can make the process very slow and resource intensive, especially 
+for larger datasets, whereas the least squares method is much easier to run and can save a lot of time and resources, 
+especially for larger datasets. For checking the results from SVD and QR decomposition, np.allclose() is preferable 
+to using exact equalities because there is often computational rounding involved, so the result is approximately
+(within very small tolerances) equal, but often not exactly equal, even though they are equal for our purposes. The 
+condition number comparison taught me that the scale of measurements between predictors matters, and can give you a 
+falsely large condition number, even if the predictors have almost no collinearity. One reproducibility practice from
+this homework that I will carry into the final project is making sure that code runs sequentially from top to bottom,
+and making sure that everything runs from top to bottom without issue with a refreshed kernel so that I am sure that 
+there are no hidden notebook states.

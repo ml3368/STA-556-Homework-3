@@ -148,7 +148,7 @@ window.Quarto = {
 </section>
 <section id="data-inspection-and-validation" class="level2">
 <h2 class="anchored" data-anchor-id="data-inspection-and-validation">1.2 Data Inspection and Validation</h2>
-<div id="2562c071" class="cell" data-execution_count="1">
+<div id="04741341" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">"data/data_raw/student_performance.csv"</span>)</span>
@@ -426,7 +426,7 @@ final_score
 <section id="part-2---matrix-setup-and-standardization" class="level1">
 <h1>Part 2 - Matrix Setup and Standardization</h1>
 <p>Convert the predictors and response to NumPy arrays</p>
-<div id="2eb9de41" class="cell" data-execution_count="2">
+<div id="2b3a0282" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>predictors <span class="op">=</span> data[</span>
@@ -436,7 +436,7 @@ final_score
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data[<span class="st">"final_score"</span>].to_numpy()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Standardize the predictors</p>
-<div id="dc4fe8f7" class="cell" data-execution_count="3">
+<div id="ea84b144" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>means <span class="op">=</span> predictors.mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sds <span class="op">=</span> predictors.std(axis<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -445,13 +445,13 @@ final_score
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">/</span> sds</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>Z.mean(axis<span class="op">=</span><span class="dv">0</span>), Z.std(axis<span class="op">=</span><span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1331">
+<div class="cell-output cell-output-display" data-execution_count="363">
 <pre><code>(array([ 3.70074342e-17, -7.47550170e-16,  1.50250183e-15]),
  array([1., 1., 1.]))</code></pre>
 </div>
 </div>
 <p>Construct the design matrix</p>
-<div id="e9fd505c" class="cell" data-execution_count="4">
+<div id="802a4a02" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.column_stack([</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    np.ones(<span class="bu">len</span>(Z)),</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    Z</span>
@@ -468,11 +468,11 @@ final_score
 <section id="part-3---least-squares" class="level1">
 <h1>Part 3 - Least Squares</h1>
 <p>Fit the model:</p>
-<div id="5c23e090" class="cell" data-execution_count="5">
+<div id="ee5b0617" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>beta_hat, <span class="op">*</span>_ <span class="op">=</span> np.linalg.lstsq(X, y, rcond<span class="op">=</span><span class="va">None</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>beta_hat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1333">
+<div class="cell-output cell-output-display" data-execution_count="365">
 <pre><code>array([92.9125    ,  2.90746853,  0.93882759,  3.22966496])</code></pre>
 </div>
 </div>
@@ -482,16 +482,16 @@ final_score
 <p>The coefficient of the standarized prior score predictor is approximately 3.2297</p>
 <p>Out of the three standardized predictors, prior score has the largest absolute value coefficient</p>
 <p>Calculate fitted values:</p>
-<div id="1f62bf44" class="cell" data-execution_count="6">
+<div id="2b094f16" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fitted <span class="op">=</span> X <span class="op">@</span> beta_hat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Calculate residuals:</p>
-<div id="c1776d70" class="cell" data-execution_count="7">
+<div id="45d9252d" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>residuals <span class="op">=</span> y <span class="op">-</span> fitted</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The mean of the residuals is approximately -0.0</p>
 <p>And the Root Mean Square Error (RMSE) is approximately:</p>
-<div id="0345891d" class="cell" data-execution_count="8">
+<div id="50aa03e0" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> np.sqrt(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    np.mean(</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        residuals <span class="op">**</span> <span class="dv">2</span></span>
@@ -499,11 +499,83 @@ final_score
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="bu">round</span>(<span class="bu">float</span>(rmse), <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1336">
+<div class="cell-output cell-output-display" data-execution_count="368">
 <pre><code>4.9777</code></pre>
 </div>
 </div>
-<p>X @ beta_hat represents our approximation of the response values given the predictor values. So X @ beta_hat gives us the y_hat values, which are the y-values of our linear regression model. The residual mean should be near zero when an intercept is present because the residuals measure how far off from our prediction model the actual measured values are, and for a normal distribution the residuals should have equal variance and have a mean of 0. The Root Mean Square Errors (RMSE) summarizes the square root of the average squared distance between the</p>
+<p>X @ beta_hat represents our approximation of the response values given the predictor values. So X @ beta_hat gives us the y_hat values, which are the y-values of our linear regression model. The residual mean should be near zero when an intercept is present because the residuals measure how far off from our prediction model the actual measured values are, and for a normal distribution the residuals should have equal variance and have a mean of 0. The Root Mean Square Errors (RMSE) summarizes the square root of the average squared distance between the actual measured values and the predicted values, and this is helpful as it returns an error in the original units of the response variable. The difference between X @ beta_hat and X * beta_hat is that the @ operator is matrix multiplication, whereas the * operator signifies element wise mutliplication. So the * operator multiplies each element of X with the same element of beta_hat, but that is not the matrix multiplication that we want for this operation. We want mathematical matrix multiplication, which uses the @ symbol.</p>
+</section>
+<section id="part-4---qr-svd-and-conditioning" class="level1">
+<h1>Part 4 - QR, SVD, and conditioning</h1>
+<p>QR decomposition:</p>
+<div id="52c739fd" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Q, R <span class="op">=</span> np.linalg.qr(X)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Shape of Q:"</span>, Q.shape)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Shape of R:"</span>, R.shape)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Q @ R = X:"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>np.allclose(</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">@</span> R,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    X</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Q.T @ Q = I:"</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>np.allclose(</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    Q.T <span class="op">@</span> Q,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    np.eye(Q.shape[<span class="dv">1</span>])</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Shape of Q: (120, 4)
+Shape of R: (4, 4)
+Q @ R = X: True
+Q.T @ Q = I: True</code></pre>
+</div>
+</div>
+<p>Single Value Decomposition (SVD):</p>
+<div id="3cba3119" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>U, s, Vt <span class="op">=</span> np.linalg.svd(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    X,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    full_matrices<span class="op">=</span><span class="va">False</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The shape of U is: (120, 4)</p>
+<p>The shape of s is: (4,)</p>
+<p>The shape of Vt is: (4, 4)</p>
+<p>The singular values are array([13.34687885, 11.1939613 , 10.95445115, 7.520376 ])</p>
+<p>Reconstruct X:</p>
+<div id="9bc7892d" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>X_reconstructed <span class="op">=</span> (</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    U</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">@</span> np.diag(s)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">@</span> Vt</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_reconstructed = X:"</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>np.allclose(</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    X_reconstructed,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    X</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>X_reconstructed = X: True</code></pre>
+</div>
+</div>
+<p>Rank and conditioning:</p>
+<p>The rank of X is 4</p>
+<p>The condition number of X is approximately 1.7748</p>
+<p>Raw, unstandardized design matrix:</p>
+<div id="441f0427" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>X_raw <span class="op">=</span> np.column_stack([</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    np.ones(<span class="bu">len</span>(predictors)),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    predictors</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The condition number of the raw, unstandardized data is approximately 1484.1694</p>
+<p>Q @ R <span class="math inline">\(\approx\)</span> X verifies that the design matrix X has been correctly decomposed into the components of Q and R, and when Q and R are matrix multiplied back together, they should gives us back (approximately because of computational rounding) our design matrix X. Q.T @ Q <span class="math inline">\(\approx\)</span> I verifies that the matrix Q is an orthonormal matrix, because for an orthonormal matrix Q, Q.t @ Q = I, so this is just verifying that that is true, because the QR decomposition should return Q as an orthonormal matrix. The singular values from SVD tell us which directions are stronger and weaker in regards to the predictors effect on the response. Higher singular values mean a stronger effect on the response, and lower singular values mean a weaker effect on the response. A large condition number suggests that there is some collinearity betweent the predictors, so there might be some redundancy in the information provided by the predictors. For this data, the condition number did very drastically change after standardization. This happened because the condition number is based on the largest singular value and the smallest singular value. And this will be affected by the scaling of the units between predictors. If one predictor is measured in the thousands, and another is measured in single digits, the condition number will be very large. The condition number being very large is more due to scale mismatching between predictors, more than it is about collinearity in that case. So that is why we used a standardized design matrix, so that all the predictors had very similar scales for their measurements, which means that the condition number here tells us more about whether any predictors are colinear or not. Based on this, the standardized design matrix does not show any evidence of sever-near redundancy among predictors, as the condition number for the design matrix was 1.7748, which is fairly close to 1.</p>
+</section>
+<section id="part-5---reproducibility-and-numerical-computing-reflection" class="level1">
+<h1>Part 5 - Reproducibility and Numerical Computing Reflection</h1>
+<p>Clean execution matters a lot for a computational report as it is very important that your work is reproducible so that others can verify your work and hopefully get the same result everytime, and so that others can also build off of your work and be sure that there are no problems with it. This is why it is also important that reusable code not depend on hidden notebook states, as that would make the whole report not reproducible as important variables or code would depend on something that is specific to only you and no one else. The reason np.linalg.lstsq() is preferable to manually computing <span class="math inline">\((X^TX)^{-1}X^Ty\)</span> is because computing inverses takes a lot of computational power, and that can make the process very slow and resource intensive, especially for larger datasets, whereas the least squares method is much easier to run and can save a lot of time and resources, especially for larger datasets. For checking the results from SVD and QR decomposition, np.allclose() is preferable to using exact equalities because there is often computational rounding involved, so the result is approximately (within very small tolerances) equal, but often not exactly equal, even though they are equal for our purposes. The condition number comparison taught me that the scale of measurements between predictors matters, and can give you a falsely large condition number, even if the predictors have almost no collinearity. One reproducibility practice from this homework that I will carry into the final project is making sure that code runs sequentially from top to bottom, and making sure that everything runs from top to bottom without issue with a refreshed kernel so that I am sure that there are no hidden notebook states.</p>
 </section>
 
 </main>
