@@ -1,0 +1,151 @@
+---
+title: "STA 556 Homework 3"
+author: "Max Levine"
+format: html
+jupyter: python3
+---
+
+# Part 1 - Reproducible Report and Data Description
+## 1.1 Introduction
+
+For this homework, I have selected the Student Performance dataset. 
+This dataset uses a response variable of Final Score, with three predictors: the amount of study hours per week,
+the students attendance as a percentage, and the students prior score. The goal of this homework is to fit and
+diagnose a linear model using matrix computation.
+
+## 1.2 Data Inspection and Validation
+
+```{python}
+import pandas as pd
+
+data = pd.read_csv("data/data_raw/student_performance.csv")
+
+print(data.head())
+print("shape:", data.shape)
+print("data types:", data.dtypes)
+```
+
+The first five raws of data are `{python} data.head()`
+
+The shape of the data is `{python} data.shape`
+
+The data types of the data are `{python} pd.DataFrame(data.dtypes)`
+
+The amount of missing values per column are `{python} pd.DataFrame(data.isna().sum())`
+
+Are the ID's in the id column unique: `{python} data["id"].is_unique`
+
+There is one response variable (the final_score column), with three predictor variables (study_hours_per_week,
+attendance_pct, prior_score). There are a total of 120 observations and there are no missing values in any of the
+columns. The IDs are also unique.
+
+# Part 2 - Matrix Setup and Standardization
+
+Convert the predictors and response to NumPy arrays
+```{python}
+import numpy as np
+
+predictors = data[
+    ["study_hours_per_week", "attendance_pct", "prior_score"]
+].to_numpy()
+
+y = data["final_score"].to_numpy()
+```
+
+Standardize the predictors
+```{python}
+means = predictors.mean(axis=0)
+sds = predictors.std(axis=0)
+
+Z = (
+    predictors - means
+) / sds
+
+Z.mean(axis=0), Z.std(axis=0)
+```
+
+Construct the design matrix
+```{python}
+X = np.column_stack([
+    np.ones(len(Z)),
+    Z
+])
+```
+
+The shape of predictors is `{python} predictors.shape`
+
+The shape of Z is `{python} Z.shape`
+
+The shape of X is `{python} X.shape`
+
+The shape of y is `{python} y.shape`
+
+The rank of X is `{python} int(np.linalg.matrix_rank(X))`
+
+The number of predictors is 1 less than the rank of X: `{python} int(np.linalg.matrix_rank(X) - 1)`
+
+X and y must have compatible shapes because otherwise matrix operations (such as addition or multiplication) between
+them wouldn't work. We include the intercept column in the X matrix because that will tell us what the
+$\widehat{\beta_0}$ that we calculate will be. Standardizing the predictors was done so that we can more easily
+compare the distribution to a normal distribution, with the standardized predictors now reporting how many standard
+deviations away from the mean they are. Broadcasting made this standardization possible with out a Python loop because
+in the Z calculation, it was implied that each element in the predictors array was to be subtracted by the mean of that
+row, so a loop was not needed to iterate through each element in the predictors array individually. The same is true
+for dividing by the sds of each row. It was implied that each element in the (predictors - mean) array was to be
+divided by the sds, so a loop iterating through each element is not needed.
+
+# Part 3 - Least Squares
+
+Fit the model:
+```{python}
+beta_hat, *_ = np.linalg.lstsq(X, y, rcond=None)
+
+beta_hat
+```
+
+The intercept of this model is approximately `{python} round(float(beta_hat[0]), 4)` points of final score
+
+The coefficient of the standardized study hours per week predictor is approximately
+`{python} round(float(beta_hat[1]), 4)`
+
+The coefficient of the standardized attendance percentage predictor is approximately
+`{python} round(float(beta_hat[2]), 4)`
+
+The coefficient of the standarized prior score predictor is approximately
+`{python} round(float(beta_hat[3]), 4)`
+
+Out of the three standardized predictors, prior score has the largest absolute value coefficient
+
+Calculate fitted values:
+```{python}
+fitted = X @ beta_hat
+```
+
+Calculate residuals:
+```{python}
+residuals = y - fitted
+```
+
+The mean of the residuals is approximately `{python} round(float(residuals.mean()), 5)`
+
+And the Root Mean Square Error (RMSE) is approximately:
+```{python}
+rmse = np.sqrt(
+    np.mean(
+        residuals ** 2
+    )
+)
+
+round(float(rmse), 4)
+```
+
+X @ beta_hat represents our approximation of the response values given the predictor values. So X @ beta_hat
+gives us the y_hat values, which are the y-values of our linear regression model. The residual mean should be near
+zero when an intercept is present because the residuals measure how far off from our prediction model the actual
+measured values are, and for a normal distribution the residuals should have equal variance and have a mean of
+0. The Root Mean Square Errors (RMSE) summarizes the square root of the average squared distance between the actual
+measured values and the predicted values, and this is helpful as it returns an error in the original units of the
+response variable. The difference between X @ beta_hat and X * beta_hat is that the @ operator is matrix
+multiplication, whereas the * operator signifies element wise mutliplication. So the * operator multiplies
+each element of X with the same element of beta_hat, but that is not the matrix multiplication that we want for this
+operation. We want mathematical matrix multiplication, which uses the @ symbol.
