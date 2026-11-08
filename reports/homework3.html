@@ -151,13 +151,13 @@ window.Quarto = {
 </section>
 <section id="data-inspection-and-validation" class="level2">
 <h2 class="anchored" data-anchor-id="data-inspection-and-validation">1.2 Data Inspection and Validation</h2>
-<div id="932a4c7f" class="cell" data-execution_count="1">
+<div id="ee65da09" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">"data/student_performance.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The first five raws of data are</p>
-<div id="b9bab970" class="cell" data-execution_count="2">
+<p>The first five rows of data are</p>
+<div id="fe1722b4" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -223,7 +223,7 @@ window.Quarto = {
 </div>
 <p>The shape of the data is (120, 5)</p>
 <p>The data types of the data are</p>
-<div id="134f9f31" class="cell" data-execution_count="3">
+<div id="594dc6e5" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>id                        int64
@@ -235,7 +235,7 @@ dtype: object</code></pre>
 </div>
 </div>
 <p>The amount of missing values per column are</p>
-<div id="efdd0762" class="cell" data-execution_count="4">
+<div id="a5422a5a" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data.isna().<span class="bu">sum</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>id                      0
@@ -253,7 +253,7 @@ dtype: int64</code></pre>
 <section id="part-2---matrix-setup-and-standardization" class="level1">
 <h1>Part 2 - Matrix Setup and Standardization</h1>
 <p>Convert the predictors and response to NumPy arrays</p>
-<div id="83ebcad5" class="cell" data-execution_count="5">
+<div id="3d2dae7b" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>predictors <span class="op">=</span> data[</span>
@@ -263,7 +263,7 @@ dtype: int64</code></pre>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data[<span class="st">"final_score"</span>].to_numpy()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Standardize the predictors</p>
-<div id="1fac9d69" class="cell" data-execution_count="6">
+<div id="e74a86c2" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>means <span class="op">=</span> predictors.mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>sds <span class="op">=</span> predictors.std(axis<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -278,7 +278,7 @@ dtype: int64</code></pre>
 </div>
 </div>
 <p>Construct the design matrix</p>
-<div id="4b804bb8" class="cell" data-execution_count="7">
+<div id="174ccf93" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.column_stack([</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    np.ones(<span class="bu">len</span>(Z)),</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    Z</span>
@@ -290,12 +290,12 @@ dtype: int64</code></pre>
 <p>The shape of y is (120,)</p>
 <p>The rank of X is 4</p>
 <p>The number of predictors is 1 less than the rank of X: 3</p>
-<p>X and y must have compatible shapes because otherwise matrix operations (such as addition or multiplication) between them wouldn’t work. We include the intercept column in the X matrix because that will tell us what the <span class="math inline">\(\widehat{\beta_0}\)</span> that we calculate will be. Standardizing the predictors was done so that all of the predictors would have a common measurement scale (for instance instead of having the study hours per week be in the single digits and the other predictors be in the double digits approaching 100, they are all centered at 0 with a standard deviation of 1) which makes the coefficients more comparable and also makes the design matrix better conditioned (talked more about later). Broadcasting made this standardization possible with out a Python loop because in the Z calculation, it was implied that each element in the predictors array was to be subtracted by the mean of that column, so a loop was not needed to iterate through each element in the predictors array individually, and the same is true for dividing by the sds of each column. It was implied that each element in the (predictors - mean) array was to be divided by the sds, so a loop iterating through each element is not needed.</p>
+<p>X and y must have compatible shapes because when you multiply X and beta_hat together, they have to return y such that y has the same number of rows as X and one column (the column of fitted values). We include the intercept column in the X matrix because that will let the model have a non-zero intercept (the line doesn’t have to start at the origin), and that will tell us what the <span class="math inline">\(\widehat{\beta_0}\)</span> that we calculate will be. Standardizing the predictors was done so that all of the predictors would have a common measurement scale (for instance instead of having the study hours per week be in the single digits and the other predictors be in the double digits approaching 100, they are all centered at 0 with a standard deviation of 1) which makes the coefficients more comparable and also makes the design matrix better conditioned (talked more about later). Broadcasting made this standardization possible without a Python loop because in the Z calculation, it was implied that each element in the predictors array was to be subtracted by the mean of that column, so a loop was not needed to iterate through each element in the predictors array individually, and the same is true for dividing by the sds of each column. It was implied that each element in the (predictors - mean) array was to be divided by the sds for each of the 120 rows, so a loop iterating through each element is not needed.</p>
 </section>
 <section id="part-3---least-squares" class="level1">
 <h1>Part 3 - Least Squares</h1>
 <p>Fit the model:</p>
-<div id="b6d502aa" class="cell" data-execution_count="8">
+<div id="b81ea502" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>beta_hat, <span class="op">*</span>_ <span class="op">=</span> np.linalg.lstsq(X, y, rcond<span class="op">=</span><span class="va">None</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>beta_hat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -306,29 +306,26 @@ dtype: int64</code></pre>
 <p>The intercept of this model is approximately 92.9125 points of final score</p>
 <p>The coefficient of the standardized study hours per week predictor is approximately 2.9075</p>
 <p>The coefficient of the standardized attendance percentage predictor is approximately 0.9388</p>
-<p>The coefficient of the standarized prior score predictor is approximately 3.2297</p>
-<div id="f14dc5e9" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>beta_max <span class="op">=</span> beta_hat[<span class="dv">1</span>:<span class="dv">4</span>].<span class="bu">max</span>()</span>
+<p>The coefficient of the standardized prior score predictor is approximately 3.2297</p>
+<div id="ad77cd14" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">vars</span> <span class="op">=</span> [<span class="st">"study_hours_per_week"</span>, <span class="st">"attendance_pct"</span>, <span class="st">"prior_score"</span>]</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> beta_max <span class="op">==</span> beta_hat[<span class="dv">1</span>]:</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Score per week has the largest absolute value coefficient"</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> beta_max <span class="op">==</span> beta_hat[<span class="dv">2</span>]:</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Attendance percentage has the largest absolute value coefficient"</span>)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Prior score has the largest absolute value coefficient"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>largest <span class="op">=</span> <span class="bu">vars</span>[<span class="bu">int</span>(np.argmax(np.<span class="bu">abs</span>(beta_hat[<span class="dv">1</span>:])))]</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>largest<span class="sc">}</span><span class="ss"> has the largest absolute value coefficient"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Prior score has the largest absolute value coefficient</code></pre>
+<pre><code>prior_score has the largest absolute value coefficient</code></pre>
 </div>
 </div>
 <p>Calculate fitted values:</p>
-<div id="11f8de8a" class="cell" data-execution_count="10">
+<div id="0cc3c371" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fitted <span class="op">=</span> X <span class="op">@</span> beta_hat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Calculate residuals:</p>
-<div id="3b39c25f" class="cell" data-execution_count="11">
+<div id="71267ad0" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>residuals <span class="op">=</span> y <span class="op">-</span> fitted</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="7085668c" class="cell" data-execution_count="12">
+<div id="10778e72" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>residuals_mean <span class="op">=</span> <span class="bu">float</span>(residuals.mean())</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The residual mean is approximately"</span>, <span class="ss">f"</span><span class="sc">{</span>residuals_mean<span class="sc">:.4e}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -336,7 +333,7 @@ dtype: int64</code></pre>
 </div>
 </div>
 <p>And the Root Mean Square Error (RMSE) is approximately:</p>
-<div id="05a87d25" class="cell" data-execution_count="13">
+<div id="d2b92a8e" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> np.sqrt(</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    np.mean(</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        residuals <span class="op">**</span> <span class="dv">2</span></span>
@@ -348,12 +345,12 @@ dtype: int64</code></pre>
 <pre><code>4.9777</code></pre>
 </div>
 </div>
-<p>X @ beta_hat represents our approximation of the response values given the predictor values, so X @ beta_hat gives us the y_hat values, which are the y-values of our linear regression model. The residual mean should be near zero when an intercept is present because the least squares method forces the residuals to sum to zero as a result of how the residuals are minimized for the least squares method. The Root Mean Square Errors (RMSE) summarizes the square root of the average squared distance between the actual measured values and the predicted values, and this is helpful as it returns an error in the original units of the response variable. The difference between X @ beta_hat and X * beta_hat is that the @ operator is matrix multiplication, whereas the * operator signifies element wise mutliplication. So the * operator multiplies each element of X with the same element of beta_hat, but that is not the matrix multiplication that we want for this operation, we want mathematical matrix multiplication, which uses the @ symbol.</p>
+<p>X @ beta_hat represents our approximation of the response values given the predictor values, so X @ beta_hat gives us the y_hat values, which are the y-values of our linear regression model. The residual mean should be near zero when an intercept is present because the least squares method forces the residuals to sum to zero as a result of how the residuals are minimized for the least squares method, with the residuals made to be orthogonal to every column in X (including the ones column). The Root Mean Square Errors (RMSE) summarizes the square root of the average squared distance between the actual measured values and the predicted values, and this is helpful as it returns an error in the original units of the response variable. The difference between X @ beta_hat and X * beta_hat is that the @ operator is matrix multiplication, whereas the * operator signifies element wise multiplication. So the * operator broadcasts beta_hat across the rows of X and will return a 120x4 array, but that is not the matrix multiplication that we want for this operation, we want mathematical matrix multiplication, which uses the @ symbol and returns one fitted value for each observation, resulting in an array of length 120 (instead of a matrix of shape 120x4).</p>
 </section>
 <section id="part-4---qr-svd-and-conditioning" class="level1">
 <h1>Part 4 - QR, SVD, and conditioning</h1>
 <p>QR decomposition:</p>
-<div id="fe7b2796" class="cell" data-execution_count="14">
+<div id="f77fcd93" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Q, R <span class="op">=</span> np.linalg.qr(X)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Shape of Q:"</span>, Q.shape)</span>
@@ -378,7 +375,7 @@ Q.T @ Q = I: True</code></pre>
 </div>
 </div>
 <p>Singular Value Decomposition (SVD):</p>
-<div id="83f405f7" class="cell" data-execution_count="15">
+<div id="35f9045d" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>U, s, Vt <span class="op">=</span> np.linalg.svd(</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    X,</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    full_matrices<span class="op">=</span><span class="va">False</span></span>
@@ -389,7 +386,7 @@ Q.T @ Q = I: True</code></pre>
 <p>The shape of Vt is: (4, 4)</p>
 <p>The singular values are array([13.34687885, 11.1939613 , 10.95445115, 7.520376 ])</p>
 <p>Reconstruct X:</p>
-<div id="d5ef196d" class="cell" data-execution_count="16">
+<div id="fdf654a1" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>X_reconstructed <span class="op">=</span> (</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    U</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">@</span> np.diag(s)</span>
@@ -409,18 +406,18 @@ Q.T @ Q = I: True</code></pre>
 <p>The rank of X is 4</p>
 <p>The condition number of X is approximately 1.7748</p>
 <p>Raw, unstandardized design matrix:</p>
-<div id="2def6aaf" class="cell" data-execution_count="17">
+<div id="c1f21b4c" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>X_raw <span class="op">=</span> np.column_stack([</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    np.ones(<span class="bu">len</span>(predictors)),</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    predictors</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The condition number of the raw, unstandardized data is approximately 1484.1694</p>
-<p>Q @ R <span class="math inline">\(\approx\)</span> X verifies that the design matrix X has been correctly decomposed into the components of Q and R, and when Q and R are matrix multiplied back together, they should gives us back (approximately because of computational rounding) our design matrix X. Q.T @ Q <span class="math inline">\(\approx\)</span> I verifies that the matrix Q is an orthonormal matrix, because for an orthonormal matrix Q, Q.T @ Q = I, so this is just verifying that that is true, because the QR decomposition should return Q as an orthonormal matrix. The singular values from SVD tell us how strong or weak the stretching/scaling of each predictor (the columns of X) applies along each of its orthogonal directions, with higher singular values meaning more stretching/scaling, and lower values meaning less scaling/stretching. A large condition number suggests that there is some collinearity betweent the predictors, so there might be some redundancy in the information provided by the predictors. For this data, the condition number did very drastically change after standardization. This happened because the condition number is based on the largest singular value and the smallest singular value and this will be affected by the scaling of the units between predictors, for example if one predictor is measured in the thousands, and another is measured in single digits, the condition number will be very large. So that is why we used a standardized design matrix, so that all the predictors had very similar scales for their measurements, which means that the condition number here tells us more about whether any predictors are colinear or not. Based on this, the standardized design matrix does not show any evidence of sever-near redundancy among predictors, as the condition number for the design matrix was 1.7748, which is fairly close to 1.</p>
+<p>Q @ R <span class="math inline">\(\approx\)</span> X verifies that the design matrix X has been correctly decomposed into the components of Q and R, and when Q and R are matrix multiplied back together, they should give us back (approximately because of computational rounding) our design matrix X. Q.T @ Q <span class="math inline">\(\approx\)</span> I verifies that the matrix Q is an orthonormal matrix, because for an orthonormal matrix Q, Q.T @ Q = I, so this is just verifying that that is true, because the QR decomposition should return Q as an orthonormal matrix. The singular values from SVD tell us how strong or weak the stretching/scaling of each predictor (the columns of X) applies along each of its orthogonal directions, with higher singular values meaning more stretching/scaling, and lower values meaning less scaling/stretching which signals that there is redudancy or near-redundancy in the columns of X. A large condition number suggests that there is some collinearity between the predictors, so there might be some redundancy in the information provided by the predictors. For this data, the condition number did very drastically change (from 1484.1694 to 1.7748) after standardization. This happened because the condition number is based on the largest singular value and the smallest singular value and this will be affected by the scaling of the units between predictors, for example if one predictor is measured in the thousands, and another is measured in single digits, the condition number will be very large. So that is why we used a standardized design matrix, so that all the predictors had very similar scales for their measurements, which means that the condition number here tells us more about whether any predictors are collinear or not. Based on this, the standardized design matrix does not show any evidence of severe-near redundancy among predictors, as the condition number for the design matrix was 1.7748, which is fairly close to 1.</p>
 </section>
 <section id="part-5---reproducibility-and-numerical-computing-reflection" class="level1">
 <h1>Part 5 - Reproducibility and Numerical Computing Reflection</h1>
-<p>Clean execution matters a lot for a computational report as it is very important that your work is reproducible so that others can verify your work and hopefully get the same result everytime, and so that others can also build off of your work and be sure that there are no problems with it. This is why it is also important that reusable code not depend on hidden notebook states, as that would make the whole report not reproducible as important variables or code would depend on something that is specific to only you and no one else. The reason np.linalg.lstsq() is preferable to manually computing <span class="math inline">\((X^TX)^{-1}X^Ty\)</span> is because computing inverses is much less numerically stable than using the least squares method, as computing an inverse involves a lot of floating point calculations, and depending on the design matrix, can introduce a lot of rounding errors, which least squares method bypasses by using Singular Value Decomposition. Another reason is that the least squares method also works on non-square matrices, while matrix inverses require a square matrix (hence why <span class="math inline">\(X^TX\)</span> is needed), which also makes the condition number much larger as a result. And lastly, using the least squares method takes less computational power and is faster than computing inverses, which is especially useful for large datasets. For checking the results from SVD and QR decomposition, np.allclose() is preferable to using exact equalities because there is often computational rounding involved, so the result is approximately (within very small tolerances) equal, but often not exactly equal, even though they are equal for our purposes. The condition number comparison taught me that the scale of measurements between predictors matters, and can give you a falsely large condition number, even if the predictors have almost no collinearity. One reproducibility practice from this homework that I will carry into the final project is making sure that code runs sequentially from top to bottom, and making sure that everything runs from top to bottom without issue with a refreshed kernel so that I am sure that there are no hidden notebook states.</p>
+<p>Clean execution matters a lot for a computational report as it is very important that your work is reproducible so that others can verify your work and hopefully get the same result every time, and so that others can also build off of your work and be sure that there are no problems with it. This is why it is also important that reusable code not depend on hidden notebook states, as that would make the whole report not reproducible as important variables or code would depend on something that is specific to only you and no one else. The reason np.linalg.lstsq() is preferable to manually computing <span class="math inline">\((X^TX)^{-1}X^Ty\)</span> is because computing inverses is much less numerically stable than using the least squares method, as computing an inverse involves a lot of floating point calculations, and depending on the design matrix, can introduce a lot of rounding errors, which least squares method bypasses by using Singular Value Decomposition. Another reason is that the least squares method also works on non-square matrices, while matrix inverses require a square matrix (hence why <span class="math inline">\(X^TX\)</span> is needed), which also squares the condition number as a result. For checking the results from SVD and QR decomposition, np.allclose() is preferable to using exact equalities because there is often computational rounding involved, so the result is approximately (within very small tolerances) equal, but often not exactly equal, even though they are equal for our purposes. The condition number comparison taught me that the scale of measurements between predictors matters, and can give you a falsely large condition number, even if the predictors have almost no collinearity. One reproducibility practice from this homework that I will carry into the final project is making sure that code runs sequentially from top to bottom, and making sure that everything runs from top to bottom without issue with a refreshed kernel so that I am sure that there are no hidden notebook states.</p>
 </section>
 
 </main>
