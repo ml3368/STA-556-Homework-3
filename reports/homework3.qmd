@@ -89,8 +89,8 @@ The rank of X is `{python} int(np.linalg.matrix_rank(X))`
 
 The number of predictors is 1 less than the rank of X: `{python} int(np.linalg.matrix_rank(X) - 1)`
 
-X and y must have compatible shapes because when you multiply X and beta_hat together, they have to return 
-y such that y has the same number of rows as X and one column (the column of fitted values). We include the intercept column in the X matrix because that will let the model have a non-zero 
+X and y must have compatible shapes because X and y must have the same number of rows (120 in this case)
+so that X @ beta_hat results in one fitted value per observation. We include the intercept column in the X matrix because that will let the model have a non-zero 
 intercept (the line doesn't have to start at the origin), and that will tell us what the
 $\widehat{\beta_0}$ that we calculate will be. Standardizing the predictors was done so that all of the predictors
 would have a common measurement scale (for instance instead of having the study hours per week be in the single digits 
@@ -123,9 +123,9 @@ The coefficient of the standardized prior score predictor is approximately
 `{python} round(float(beta_hat[3]), 4)`
 
 ```{python}
-vars = ["study_hours_per_week", "attendance_pct", "prior_score"]
+predictor_names = ["study_hours_per_week", "attendance_pct", "prior_score"]
 
-largest = vars[int(np.argmax(np.abs(beta_hat[1:])))]
+largest = predictor_names[int(np.argmax(np.abs(beta_hat[1:])))]
 
 print(f"{largest} has the largest absolute value coefficient")
 ```
@@ -242,18 +242,19 @@ Q @ R $\approx$ X verifies that the design matrix X has been correctly decompose
 and when Q and R are matrix multiplied back together, they should give us back (approximately because of
 computational rounding) our design matrix X. Q.T @ Q $\approx$ I verifies that the matrix Q is an orthonormal matrix,
 because for an orthonormal matrix Q, Q.T @ Q = I, so this is just verifying that that is true, because the QR
-decomposition should return Q as an orthonormal matrix. The singular values from SVD tell us how strong or weak the stretching/scaling of each predictor (the columns of X) applies along
-each of its orthogonal directions, with higher singular values meaning more stretching/scaling, and lower values meaning 
-less scaling/stretching which signals that there is redudancy or near-redundancy in the columns of X. A large condition number suggests
+decomposition should return Q as an orthonormal matrix. The singular values from SVD tell us how strong or weak the stretching/scaling of X applies along
+each of its orthogonal directions, with higher singular values meaning more stretching/scaling, and small singular
+values (close to 0) meaning less scaling/stretching which signals that there is redundancy or near-redundancy in the columns of X. A large condition number suggests
 that there is some collinearity between the predictors, so there might be some redundancy in the information provided
 by the predictors. For this data, the condition number did very drastically change (from `{python} round(float(np.linalg.cond(X_raw)), 4)` 
 to `{python} round(float(np.linalg.cond(X)), 4)`) after standardization. This happened
 because the condition number is based on the largest singular value and the smallest singular value and this will
-be affected by the scaling of the units between predictors, for example if one predictor is measured in the thousands, and another
-is measured in single digits, the condition number will be very large. So that is why we used a
-standardized design matrix, so that all the predictors had very similar scales for their measurements, which means that
+be affected by the scaling of the units between predictors (one predictor measured in thousands and another measured in 
+single digits) and their centering (centered at 0 vs centered far away from 0, like for score values).
+So that is why we used a
+standardized design matrix, so that all the predictors had very similar scales and centering for their measurements, which means that
 the condition number here tells us more about whether any predictors are collinear or not. Based on this, the
-standardized design matrix does not show any evidence of severe-near redundancy among predictors, as the condition
+standardized design matrix does not show any evidence of severe near-redundancy among predictors, as the condition
 number for the design matrix was `{python} round(float(np.linalg.cond(X)),4)`, which is fairly close to 1.
 
 # Part 5 - Reproducibility and Numerical Computing Reflection
