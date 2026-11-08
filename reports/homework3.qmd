@@ -18,26 +18,31 @@ diagnose a linear model using matrix computation.
 ```{python}
 import pandas as pd
 
-data = pd.read_csv("data/data_raw/student_performance.csv")
-
-print(data.head())
-print("shape:", data.shape)
-print("data types:", data.dtypes)
+data = pd.read_csv("data/student_performance.csv")
 ```
 
-The first five raws of data are `{python} data.head()`
+The first five raws of data are
+```{python}
+data.head()
+```
 
 The shape of the data is `{python} data.shape`
 
-The data types of the data are `{python} pd.DataFrame(data.dtypes)`
+The data types of the data are
+```{python}
+data.dtypes
+```
 
-The amount of missing values per column are `{python} pd.DataFrame(data.isna().sum())`
+The amount of missing values per column are
+```{python}
+data.isna().sum()
+```
 
 Are the ID's in the id column unique: `{python} data["id"].is_unique`
 
-There is one response variable (the final_score column), with three predictor variables (study_hours_per_week,
-attendance_pct, prior_score). There are a total of 120 observations and there are no missing values in any of the
-columns. The IDs are also unique.
+There are a total of `{python} len(data)` observations and there are `{python} data.shape[1]` variables.
+There are `{python} int(data.isna().sum().sum())` missing values.
+The IDs are `{python} "unique." if data["id"].is_unique == True else "not unique."`
 
 # Part 2 - Matrix Setup and Standardization
 
@@ -86,12 +91,14 @@ The number of predictors is 1 less than the rank of X: `{python} int(np.linalg.m
 
 X and y must have compatible shapes because otherwise matrix operations (such as addition or multiplication) between
 them wouldn't work. We include the intercept column in the X matrix because that will tell us what the
-$\widehat{\beta_0}$ that we calculate will be. Standardizing the predictors was done so that we can more easily
-compare the distribution to a normal distribution, with the standardized predictors now reporting how many standard
-deviations away from the mean they are. Broadcasting made this standardization possible with out a Python loop because
+$\widehat{\beta_0}$ that we calculate will be. Standardizing the predictors was done so that all of the predictors
+would have a common measurement scale (for instance instead of having the study hours per week be in the single digits 
+and the other predictors be in the double digits approaching 100, they are all centered at 0 with a 
+standard deviation of 1) which makes the coefficients more comparable and also makes the design matrix better
+conditioned (talked more about later). Broadcasting made this standardization possible with out a Python loop because
 in the Z calculation, it was implied that each element in the predictors array was to be subtracted by the mean of that
-row, so a loop was not needed to iterate through each element in the predictors array individually. The same is true
-for dividing by the sds of each row. It was implied that each element in the (predictors - mean) array was to be
+column, so a loop was not needed to iterate through each element in the predictors array individually, and the same is true
+for dividing by the sds of each column. It was implied that each element in the (predictors - mean) array was to be
 divided by the sds, so a loop iterating through each element is not needed.
 
 # Part 3 - Least Squares
@@ -114,7 +121,16 @@ The coefficient of the standardized attendance percentage predictor is approxima
 The coefficient of the standarized prior score predictor is approximately
 `{python} round(float(beta_hat[3]), 4)`
 
-Out of the three standardized predictors, prior score has the largest absolute value coefficient
+```{python}
+beta_max = beta_hat[1:4].max()
+
+if beta_max == beta_hat[1]:
+    print("Score per week has the largest absolute value coefficient")
+if beta_max == beta_hat[2]:
+    print("Attendance percentage has the largest absolute value coefficient")
+else:
+    print("Prior score has the largest absolute value coefficient")
+```
 
 Calculate fitted values:
 ```{python}
@@ -126,7 +142,10 @@ Calculate residuals:
 residuals = y - fitted
 ```
 
-The mean of the residuals is approximately `{python} round(float(residuals.mean()), 5)`
+```{python}
+residuals_mean = float(residuals.mean())
+print("The residual mean is approximately", f"{residuals_mean:.4e}")
+```
 
 And the Root Mean Square Error (RMSE) is approximately:
 ```{python}
@@ -139,16 +158,15 @@ rmse = np.sqrt(
 round(float(rmse), 4)
 ```
 
-X @ beta_hat represents our approximation of the response values given the predictor values. So X @ beta_hat
-gives us the y_hat values, which are the y-values of our linear regression model. The residual mean should be near
-zero when an intercept is present because the residuals measure how far off from our prediction model the actual
-measured values are, and for a normal distribution the residuals should have equal variance and have a mean of
-0. The Root Mean Square Errors (RMSE) summarizes the square root of the average squared distance between the actual
+X @ beta_hat represents our approximation of the response values given the predictor values, so X @ beta_hat
+gives us the y_hat values, which are the y-values of our linear regression model. The residual mean should 
+be near zero when an intercept is present because the least squares method forces the residuals to sum to
+zero as a result of how the residuals are minimized for the least squares method. The Root Mean Square Errors (RMSE) summarizes the square root of the average squared distance between the actual
 measured values and the predicted values, and this is helpful as it returns an error in the original units of the
 response variable. The difference between X @ beta_hat and X * beta_hat is that the @ operator is matrix
 multiplication, whereas the * operator signifies element wise mutliplication. So the * operator multiplies
 each element of X with the same element of beta_hat, but that is not the matrix multiplication that we want for this
-operation. We want mathematical matrix multiplication, which uses the @ symbol.
+operation, we want mathematical matrix multiplication, which uses the @ symbol.
 
 # Part 4 - QR, SVD, and conditioning
 
@@ -172,7 +190,7 @@ np.allclose(
 ))
 ```
 
-Single Value Decomposition (SVD):
+Singular Value Decomposition (SVD):
 ```{python}
 U, s, Vt = np.linalg.svd(
     X,
@@ -223,16 +241,15 @@ The condition number of the raw, unstandardized data is approximately
 Q @ R $\approx$ X verifies that the design matrix X has been correctly decomposed into the components of Q and R,
 and when Q and R are matrix multiplied back together, they should gives us back (approximately because of
 computational rounding) our design matrix X. Q.T @ Q $\approx$ I verifies that the matrix Q is an orthonormal matrix,
-because for an orthonormal matrix Q, Q.t @ Q = I, so this is just verifying that that is true, because the QR
-decomposition should return Q as an orthonormal matrix. The singular values from SVD tell us which directions are
-stronger and weaker in regards to the predictors effect on the response. Higher singular values mean a stronger effect
-on the response, and lower singular values mean a weaker effect on the response. A large condition number suggests
+because for an orthonormal matrix Q, Q.T @ Q = I, so this is just verifying that that is true, because the QR
+decomposition should return Q as an orthonormal matrix. The singular values from SVD tell us how strong or weak the stretching/scaling of each predictor (the columns of X) applies along
+each of its orthogonal directions, with higher singular values meaning more stretching/scaling, and lower values meaning 
+less scaling/stretching. A large condition number suggests
 that there is some collinearity betweent the predictors, so there might be some redundancy in the information provided
 by the predictors. For this data, the condition number did very drastically change after standardization. This happened
-because the condition number is based on the largest singular value and the smallest singular value. And this will
-be affected by the scaling of the units between predictors. If one predictor is measured in the thousands, and another
-is measured in single digits, the condition number will be very large. The condition number being very large is more due
-to scale mismatching between predictors, more than it is about collinearity in that case. So that is why we used a
+because the condition number is based on the largest singular value and the smallest singular value and this will
+be affected by the scaling of the units between predictors, for example if one predictor is measured in the thousands, and another
+is measured in single digits, the condition number will be very large. So that is why we used a
 standardized design matrix, so that all the predictors had very similar scales for their measurements, which means that
 the condition number here tells us more about whether any predictors are colinear or not. Based on this, the
 standardized design matrix does not show any evidence of sever-near redundancy among predictors, as the condition
@@ -245,10 +262,13 @@ so that others can verify your work and hopefully get the same result everytime,
 build off of your work and be sure that there are no problems with it. This is why it is also important that 
 reusable code not depend on hidden notebook states, as that would make the whole report not reproducible as 
 important variables or code would depend on something that is specific to only you and no one else.
-The reason np.linalg.lstsq() is preferable to manually computing $(X^TX)^{-1}X^Ty$ is because computing inverses 
-takes a lot of computational power, and that can make the process very slow and resource intensive, especially 
-for larger datasets, whereas the least squares method is much easier to run and can save a lot of time and resources, 
-especially for larger datasets. For checking the results from SVD and QR decomposition, np.allclose() is preferable 
+The reason np.linalg.lstsq() is preferable to manually computing $(X^TX)^{-1}X^Ty$ is because computing inverses
+is much less numerically stable than using the least squares method, as computing an inverse involves a lot of
+floating point calculations, and depending on the design matrix, can introduce a lot of rounding errors, which 
+least squares method bypasses by using Singular Value Decomposition. Another reason is that the least squares 
+method also works on non-square matrices, while matrix inverses require a square matrix (hence why $X^TX$ is 
+needed), which also makes the condition number much larger as a result. And lastly, using the least squares method 
+takes less computational power and is faster than computing inverses, which is especially useful for large datasets. For checking the results from SVD and QR decomposition, np.allclose() is preferable 
 to using exact equalities because there is often computational rounding involved, so the result is approximately
 (within very small tolerances) equal, but often not exactly equal, even though they are equal for our purposes. The 
 condition number comparison taught me that the scale of measurements between predictors matters, and can give you a 
